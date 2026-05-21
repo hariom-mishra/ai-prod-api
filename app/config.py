@@ -1,15 +1,18 @@
 from functools import lru_cache
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Settings(BaseSettings):
     #llm config
-    open_ai_api_key: str
+    openai_api_key: str
     primary_model: str = "gpt-4o-mini"
     fallback_model: str = "gpt-4o-mini"
 
     #langsmith
     langchain_tracing_v2: bool = True
-    langchain_api_key: str
+    langsmith_api_key: str
     langchain_project: str = "prod-api"
     
     #app
@@ -23,6 +26,10 @@ class Settings(BaseSettings):
     @property
     def isProduction(self) ->bool:
         return self.app_env =="production"
+
+    @property
+    def environment(self) -> str:
+        return self.app_env
 
 @lru_cache()
 def get_settings() -> Settings:
